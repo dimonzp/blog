@@ -1,0 +1,65 @@
+.group {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.input {
+  font-size: 10px;
+  padding: 10px;
+  display: block;
+  width: 220px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  
+  &:focus{
+    outline: none;
+  }
+    
+  &:focus ~ label,
+  &:valid ~ label {
+    top: -20px;
+    font-size: 14px;
+    color: #5264ae;
+  }
+}
+
+.label {
+  color: #999;
+  font-size: 20px;
+  position: absolute;
+  pointer-events: none;
+  left: 10px;
+  top: 25px;
+  transition: 0.2s ease all;
+  -moz-transition: 0.2s ease all;
+  -webkit-transition: 0.2s ease all;
+}
+
+.bar {
+  position: relative;
+  display: block;
+  width: 220px;
+  &:before,
+  &:after {
+    content: "";
+    height: 2px;
+    width: 0;
+    bottom: 0;
+    position: absolute;
+    background: #5264ae;
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+  }
+  &:before {
+    left: 50%;
+  }
+  &:after {
+    right: 50%;
+  }
+}
+.input:focus ~ .bar {
+  &:before, &:after {
+    width: 50%;
+  }
+}

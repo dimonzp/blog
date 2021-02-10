@@ -1,0 +1,22 @@
+.App {
+  margin: 0;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.mainHeader {
+  min-height: 10vh;
+  background: linear-gradient(#000c38, #02196db6);
+}
+
+.content {
+  flex-grow: 1;
+  background: #ffffff;
+}
+
+.footer {
+  flex-shrink: 0;
+  background: linear-gradient(#000c38, #02196db6);
+}
