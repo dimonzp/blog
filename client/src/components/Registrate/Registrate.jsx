@@ -1,9 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Form, Input, Tooltip, Button, Alert } from "antd";
+import { Form, Input, Tooltip, Button } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
+import { useErrorMessage } from "../../hooks/useErrorMessage";
 
 const formItemLayout = {
+  
   labelCol: {
     xs: {
       span: 24,
@@ -36,8 +38,10 @@ const tailFormItemLayout = {
 
 const Registrate = ({ onHandlerSubmit, error }) => {
   const [form] = Form.useForm();
+  const getErrorMessage = useErrorMessage(error, "No such user")
 
   const onFinish = ({ email, password, nickname }) => {
+    getErrorMessage()
    onHandlerSubmit(email, password, nickname)
   };
 
@@ -61,6 +65,7 @@ const Registrate = ({ onHandlerSubmit, error }) => {
             type: "email",
             message: "The input is not valid E-mail!",
           },
+          
           {
             required: true,
             message: "Please input your E-mail!",
@@ -77,6 +82,13 @@ const Registrate = ({ onHandlerSubmit, error }) => {
           {
             required: true,
             message: "Please input your password!",
+          },
+          {
+            required: true,
+            pattern: new RegExp(
+              /[^а-яА-ЯёЁ\s]$/
+            ),
+            message: "Don`t use Cyrillic symbols or spaces"
           },
           {
             min: 6,
@@ -141,14 +153,7 @@ const Registrate = ({ onHandlerSubmit, error }) => {
       </Form.Item>
 
       <Form.Item {...tailFormItemLayout}>
-        {error ? (
-          <Alert
-            message="Error"
-            description={error}
-            type="error"
-            showIcon
-          />
-        ) : null}
+        
         <Button type="primary" htmlType="submit">
           Register
         </Button>

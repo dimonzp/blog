@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Button, Modal, Card, Image } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
-import PhotoLoader from "./PhotoLoader";
+import PhotoLoader from "../../common/PhotoLoader/PhotoLoader";
 import noUser from "../../../assets/noUser.png";
 import OnePost from "../../Post/OnePost";
 import { filterPost } from "../../../utils/filterPost";
 import Title from "antd/lib/typography/Title";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { FormOutlined } from "@ant-design/icons";
 import AddNewPostContainer from "../../Post/AddNewPost/AddNewPostContainer";
+import { useModal } from "../../../hooks/useModal";
 
 const Cabinet = ({
   updateUser,
@@ -19,50 +20,28 @@ const Cabinet = ({
   dateCreated,
   updateAvatar,
   posts,
+  deleteUser,
 }) => {
   const [name, setName] = useState(userName);
   const [isAddPost, setIsAddPost] = useState(false);
 
-  const [base64, setBase64] = useState({});
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isModalUpdateVisible, setisModalUpdateVisible] = useState(false);
+  const [file, setFile] = useState({});
+  const afterDeleteUser = (id) => {
+    deleteUser(id);
+    history.push("/posts")
+  }
+
+  const updateModal = useModal("Update User", updateUser, _id, name);
+  const updatePhoto = useModal("Load new photo", updateAvatar, _id, file);
+  const deleteUserModal = useModal("Delete user", afterDeleteUser, _id);
+  
+  const history = useHistory();
+
+
 
   useEffect(() => {
-    
     setName(userName);
   }, [userName, setIsAddPost]);
-
-  // =============== for load new photo modal
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleOk = () => {
-    if (base64) {
-      updateAvatar(_id, base64);
-    }
-
-    setIsModalVisible(false);
-    setBase64("");
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-    setBase64("");
-  };
-  // =============== for update modal
-  const showUpdateModal = () => {
-    setisModalUpdateVisible(true);
-  };
-
-  const updateHandleOk = () => {
-    updateUser(_id, name);
-    setisModalUpdateVisible(false);
-  };
-
-  const updateHandleCancel = () => {
-    setisModalUpdateVisible(false);
-  };
 
   return (
     <>
@@ -73,25 +52,18 @@ const Cabinet = ({
           src={avatar ? avatar : noUser}
           preview={false}
         />
-        <Button type="warning" onClick={showModal}>
+        <Button type="warning" onClick={() => updatePhoto.openModal(true)}>
           Change photo
         </Button>
-        <Modal
-          title="Load new photo"
-          visible={isModalVisible}
-          onOk={handleOk}
-          onCancel={handleCancel}
-        >
-          <PhotoLoader setBase64={setBase64} />
+        <Modal {...updatePhoto.bind}>
+          <PhotoLoader setFile={setFile} />
         </Modal>
 
-        <Modal
-          title="Update User"
-          visible={isModalUpdateVisible}
-          onOk={updateHandleOk}
-          onCancel={updateHandleCancel}
-        >
+        <Modal {...updateModal.bind}>
           <Title>Want to update user?</Title>
+        </Modal>
+        <Modal {...deleteUserModal.bind}>
+          <Title type="danger">Want to DELETE user???</Title>
         </Modal>
 
         <Paragraph
@@ -107,16 +79,28 @@ const Cabinet = ({
         <p>{`id: ${_id}`}</p>
         <p>{`Registreted: ${new Date(dateCreated).toLocaleDateString()}`}</p>
 
-        <Button type="primary" onClick={showUpdateModal}>
+        <Button type="primary" onClick={updateModal.openModal}>
           Update User
         </Button>
-        <div style={{ paddingTop: "10px" }}>
-          <Button icon={<FormOutlined />} onClick={() => setIsAddPost(!isAddPost)}>
+        <div style={{ paddingTop: "10px", paddingBottom: "10px" }}>
+          <Button danger onClick={deleteUserModal.openModal}>
+            Delete User
+          </Button>
+        </div>
+        <div>
+          <Button
+            icon={<FormOutlined />}
+            onClick={() => setIsAddPost(!isAddPost)}
+          >
             {isAddPost ? "Hide" : "Add Post"}
           </Button>
         </div>
-        {isAddPost && <AddNewPostContainer setIsAddPost={setIsAddPost} redirectPath={"/cabinet"}/>}
-        
+        {isAddPost && (
+          <AddNewPostContainer
+            setIsAddPost={setIsAddPost}
+            redirectPath={"/cabinet"}
+          />
+        )}
       </Card>
       {filterPost(posts, "", true, _id).length ? (
         filterPost(posts, "", true, _id).map((p) => {

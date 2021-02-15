@@ -25,6 +25,7 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
+    "cypress:open": "cypress open",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -50,6 +51,7 @@
     ]
   },
   "devDependencies": {
+    "@cypress/react": "^4.16.4",
     "cypress": "^6.4.0"
   }
 }

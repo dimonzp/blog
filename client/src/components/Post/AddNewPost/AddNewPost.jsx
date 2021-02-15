@@ -58,7 +58,7 @@ const AddNewPost = ({ sendNewPost }) => {
           rules={[
             {
               required: true,
-              message: "Please input your password!",
+              message: "Please input main text!",
             },
             {
               min: 20,
@@ -66,7 +66,7 @@ const AddNewPost = ({ sendNewPost }) => {
             },
             {
               max: 400,
-              message: "Max 10000 symbols",
+              message: "Max 400 symbols",
             },
           ]}
         >

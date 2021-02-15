@@ -4,11 +4,13 @@ import { Menu, Modal } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
 import noPhoto from "../../assets/noUser.png";
 import Title from "antd/lib/typography/Title";
+import { useModal } from "../../hooks/useModal";
 
 const SideBar = ({ email, logout, avatar }) => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedPage, setSelectedPage] = useState("")
   const location = useLocation().pathname;
+  const logoutModal = useModal('LOGOUT', logout)
+
   useEffect(() => {
     switch (location) {
       case '/posts/new':
@@ -17,26 +19,11 @@ const SideBar = ({ email, logout, avatar }) => {
       case '/cabinet':
         setSelectedPage("2")
         break;
-    
       default:
         setSelectedPage('')
         break;
     }
   }, [location])
-
-
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleOk = () => {
-    logout();
-    setIsModalVisible(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
 
   return (
     <Menu theme="dark" mode="inline" selectedKeys={[selectedPage]}>
@@ -53,15 +40,12 @@ const SideBar = ({ email, logout, avatar }) => {
             <Link to={"/cabinet"}>My Cabinet</Link>
           </Menu.Item>
           <Menu.Item key="3">
-            <Link to="" onClick={showModal}>
+            <Link to="" onClick={logoutModal.openModal}>
               Logout
             </Link>
           </Menu.Item>
           <Modal
-            title="LOGOUT"
-            visible={isModalVisible}
-            onOk={handleOk}
-            onCancel={handleCancel}
+            {...logoutModal.bind}
           >
             <Title>You realy want to logout?</Title>
           </Modal>

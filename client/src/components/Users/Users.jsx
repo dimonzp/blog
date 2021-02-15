@@ -5,7 +5,9 @@ import noUser from "../../assets/noUser.png";
 import Filter from "../common/Filter/Filter";
 import { useCallback } from "react";
 import { filterUser } from "../../utils/filterUser";
-import Text from "antd/lib/typography/Text";
+import SearchNotFound from "../common/SeachNotFound/SearchNotFoundPost";
+import MarkedText from "../common/MarkedText/MarkedText";
+import MyCarousel from "../common/MyCarousel/MyCarousel";
 
 const { Meta } = Card;
 
@@ -42,69 +44,61 @@ const Users = ({ users }) => {
   };
 
   return (
-    <div style={{paddingBottom: "5%"}}>
+    <div style={{ paddingBottom: "10%" }}>
       <h1>Users</h1>
-      <div style={{ paddingTop: "10px" }}>
-        <Filter onChangeHandler={onChangeHandler} placeHolder={'Name, email'}/>
+      <div>
+        <MyCarousel users={users}/>
       </div>
-      {postsPage(page).map((u) => {
-        return (
-          <Link key={u._id} to={`/user/${u._id}`}>
-            <Card
-              hoverable
-              title={
-                typeof u.name === "string"
-                  ? u.name
-                  : u.name &&
-                    u.name.map((t, index) => {
-                      return filtredWord.toLowerCase() === t.toLowerCase() ? (
-                        <Text key={`${u._id}.${index}`} mark>
-                          {t}
-                        </Text>
-                      ) : (
-                        <span key={`${u._id}.${index}`}>{t}</span>
-                      );
-                    })
-              }
-              bordered={false}
-              style={{ margin: 10 }}
-            >
-              <Avatar src={<Image src={u.avatar ? u.avatar : noUser} />} />
+      <div style={{ paddingTop: "15px" }}>
+        <Filter onChangeHandler={onChangeHandler} placeHolder={"Name, email"} />
+      </div>
+      {postsPage(page).length ? (
+        <div>
+          {postsPage(page).map((u) => {
+            return (
+              <Link key={u._id} to={`/user/${u._id}`}>
+                <Card
+                  hoverable
+                  title={<MarkedText word={u.name} filtredWord={filtredWord} />}
+                  bordered={false}
+                  style={{ margin: 10 }}
+                >
+                  <Avatar src={<Image src={u.avatar ? u.avatar : noUser} />} />
 
-              <p>
-                {typeof u.email === "string"
-                  ? u.email
-                  : u.email &&
-                    u.email.map((t, index) => {
-                      return filtredWord.toLowerCase() === t.toLowerCase() ? (
-                        <Text key={`${u._id}.${index}`} mark>
-                          {t}
-                        </Text>
-                      ) : (
-                        <span key={`${u._id}.${index}`}>{t}</span>
-                      );
-                    })}
-              </p>
+                  <p>
+                    <MarkedText word={u.email} filtredWord={filtredWord} />
+                  </p>
 
-              <Meta description={`id: ${u._id}`} />
-              <Meta
-                description={`Registreted: ${new Date(
-                  u.dateCreated
-                ).toLocaleDateString()}`}
-              />
-            </Card>
-          </Link>
-        );
-      })}
-      <Pagination
-        size="small"
-        total={filtredUsers.length}
-        pageSize={5}
-        onChange={(page) => {
-          setPage(page);
-        }}
-        current={page}
-      />
+                  <Meta
+                    description={
+                      <p>
+                        id:{" "}
+                        <MarkedText word={u._id} filtredWord={filtredWord} />
+                      </p>
+                    }
+                  />
+                  <Meta
+                    description={`Registreted: ${new Date(
+                      u.dateCreated
+                    ).toLocaleDateString()}`}
+                  />
+                </Card>
+              </Link>
+            );
+          })}
+          <Pagination
+            size="small"
+            total={filtredUsers.length}
+            pageSize={5}
+            onChange={(page) => {
+              setPage(page);
+            }}
+            current={page}
+          />
+        </div>
+      ) : (
+        <SearchNotFound title={"Users not found by filter"} />
+      )}
     </div>
   );
 };

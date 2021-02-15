@@ -1,10 +1,13 @@
 import { takeEvery, put, call, all } from "redux-saga/effects";
 import { authAPI, usersAPI, postAPI } from "../api/api";
 import {
+  DELETE_USER,
   GET_ME,
+  logout,
   POST_AUTH,
   setAuthDate,
   setError,
+  setMessage,
   UPDATE_AVATAR,
   UPDATE_USER,
 } from "./auth/actions";
@@ -16,6 +19,7 @@ import {
   setPostById,
   setPosts,
   UPDATE_POST,
+  UPDATE_POST_PICTURE,
 } from "./posts/actions";
 import {
   REGISTRATE_USER,
@@ -32,7 +36,8 @@ function* workerGetMe() {
 
     yield put(setAuthDate(user));
   } catch (e) {
-    localStorage.clear()
+    localStorage.clear();
+    // console.log("GGGGGGGGGG", e.response.data.error);
     yield put(setError(e.response.data.error));
   }
 }
@@ -52,6 +57,7 @@ function* workerPostAuth(action) {
     yield put(setAuthDate(user));
   } catch (e) {
     localStorage.clear();
+    console.log("ERROR MESSAGE",e.response.data.error);
     yield put(setError(e.response.data.error));
   }
 }
@@ -222,10 +228,44 @@ export function* watchUpdateAvatar() {
   yield takeEvery(UPDATE_AVATAR, workerUpdateAvatar);
 }
 
+// Delete user
+function* workerDeleteUser(action) {
+  try {
+    const message = yield call(usersAPI.deleteUser, action.id);
+    yield put(setMessage(message));
+    yield put(logout());
+
+  } catch (e) {
+    console.log("error from delete user saga", e.response.data.error);
+    yield put(setError(e.response.data.error));
+  }
+}
+
+export function* watchDeleteUser() {
+  yield takeEvery(DELETE_USER, workerDeleteUser);
+}
+
+// Update post image with give ID
+function* workerUpdatePostPicture(action) {
+  try {
+    
+    const post = yield call(postAPI.updatePostImageById, action.id, action.picture);
+    yield put(setPostById(post))
+  } catch (e) {
+    console.log("error from Update Picture Post saga", e.response.data.error);
+    yield put(setError(e.response.data.error));
+  }
+}
+
+export function* watchUpdatePostPicture() {
+  yield takeEvery(UPDATE_POST_PICTURE, workerUpdatePostPicture);
+}
+
 export default function* rootSaga() {
   yield all([
     watchGetMe(),
     watchPostAuth(),
+    watchDeleteUser(),
     watchRegistrateUser(),
     watchSetUsers(),
     watchGetPosts(),
@@ -235,6 +275,7 @@ export default function* rootSaga() {
     watchDeletePostById(),
     watchUpdatePostById(),
     watchUpdateUser(),
-    watchUpdateAvatar()
+    watchUpdateAvatar(),
+    watchUpdatePostPicture()
   ]);
 }

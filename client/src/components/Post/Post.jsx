@@ -3,7 +3,7 @@ import { Switch, Pagination } from "antd";
 import OnePost from "./OnePost";
 import Filter from "../common/Filter/Filter";
 import { filterPost } from "../../utils/filterPost";
-import NotFoundPost from "./NotFoundPost";
+import SearchNotFound from "../common/SeachNotFound/SearchNotFoundPost";
 
 const Posts = ({ posts, userId, users }) => {
   const [isMyPosts, setIsMyPosts] = useState(false);
@@ -58,7 +58,7 @@ const Posts = ({ posts, userId, users }) => {
         />
       )}
       {postsPage(page).length ? (
-        <div key={"dd"}>
+        <div>
           {postsPage(page).map((p, index) => {
             const userPostedBy =
               users.find((user) => user._id === p.postedBy) || {};
@@ -89,7 +89,7 @@ const Posts = ({ posts, userId, users }) => {
           />
         </div>
       ) : (
-        <NotFoundPost key={`${userId}`} />
+        <SearchNotFound title={"Post not found by filter"} />
       )}
     </div>
   );

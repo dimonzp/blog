@@ -15,7 +15,7 @@ const MainContainer = () => {
   return (
     <div
       className="site-layout-background"
-      style={{ padding: 24, minHeight: 360 }}
+      style={{ padding: 24 }}
     >
       <Route exact path="/" component={PostContainer} />
       <Route exact path="/login" component={AuthContainer} />

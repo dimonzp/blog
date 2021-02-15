@@ -9,13 +9,14 @@ import MainContainer from "./components/MainRoute/MainRoute";
 
 const { Header, Content, Footer, Sider } = Layout;
 
-function App(props) {
+const App = (props) => {
   const { getMe } = props;
+
   useEffect(getMe, [getMe]);
 
   return (
     <Layout>
-      <Sider breakpoint="lg" collapsedWidth="0" >
+      <Sider breakpoint="lg" collapsedWidth="0">
         <SideBarContainer />
       </Sider>
       <Layout
@@ -35,7 +36,6 @@ function App(props) {
         <Content
           style={{
             margin: "24px 16px 0",
-
             backgroundColor: "#F0F2F5",
           }}
         >
@@ -43,7 +43,6 @@ function App(props) {
         </Content>
         <Footer
           style={{
-            // borderTop: "1px solid #e8e8e8",
             position: "fixed",
             left: 0,
             bottom: 0,
@@ -58,6 +57,6 @@ function App(props) {
       </Layout>
     </Layout>
   );
-}
+};
 
 export default compose(connect(null, { getMe }))(App);

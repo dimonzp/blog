@@ -23,8 +23,12 @@ const PostPage = ({
     >
       <Meta description={description} />
       {image && (
-        <Image width={300} style={{ justifyItems: "center" }} src={image} />
-      )}
+          <Image
+            width={300}
+            src={image}
+            preview={false}
+          />
+        )}
       <p>{fullText}</p>
       <p>{`Registreted: ${new Date(dateCreated).toLocaleDateString()}`}</p>
     </Card>

@@ -4,6 +4,7 @@ export const GET_POST_BY_ID = "GET_POST_BY_ID";
 export const CREATE_NEW_POST = "CREATE_NEW_POST";
 export const UPDATE_POST = "UPDATE_POST";
 export const DELETE_POST = "DELETE_POST";
+export const UPDATE_POST_PICTURE = "UPDATE_POST_PICTURE";
 
 export const SET_POSTS = "SET_POSTS";
 export const SET_POST_PAGE = "SET_POST_PAGE";
@@ -35,6 +36,11 @@ export const updatePost = (id, title, fullText, description) => ({
 export const deletePost = (id) => ({
   type: DELETE_POST,
   id,
+});
+export const updatePostPicture = (id, picture) => ({
+  type: UPDATE_POST_PICTURE,
+  id,
+  picture,
 });
 
 //action

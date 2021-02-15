@@ -1,9 +1,9 @@
 import React from "react";
-import { Card, Avatar, Image } from "antd";
+import { Card, Avatar, Image, Button } from "antd";
 import { EditOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import noPhoto from "../../assets/noUser.png";
-import Text from "antd/lib/typography/Text";
+import MarkedText from "../common/MarkedText/MarkedText";
 
 const { Meta } = Card;
 
@@ -18,40 +18,22 @@ const OnePost = ({
   filtredWord,
   postedById,
 }) => {
+  const history = useHistory();
+
   return (
-    <Card
-      key={`${postId}.${postedBy}`}
-      hoverable
-      title={
-        typeof title === "string"
-          ? title
-          : title &&
-            title.map((t, index) => {
-              return filtredWord.toLowerCase() === t.toLowerCase() ? (
-                <Text key={`${postId}.${index}`} mark>
-                  {t}
-                </Text>
-              ) : (
-                <span key={`${postId}.${index}`}>{t}</span>
-              );
-            })
-      }
-      bordered={false}
-      style={{ margin: 10 }}
-    >
-      <Link key={`${postId}.${postedBy}`} to={`/post/${postId}`}>
+      <Card
+        key={`${postId}.${postedBy}`}
+        hoverable
+        onClick={() => history.push(`/post/${postId}`)}
+        title={
+          <MarkedText word={title} filtredWord={filtredWord}/>
+        }
+        bordered={false}
+        style={{ margin: 10 }}
+      >
         <Meta
           description={
-            typeof description === "string"
-              ? description
-              : title &&
-                description.map((d, index) => {
-                  return filtredWord.toLowerCase() === d.toLowerCase() ? (
-                    <Text key={`${postId}.${index}`} mark>{d}</Text>
-                  ) : (
-                    <span key={`${postId}.${index}`}>{d}</span>
-                  );
-                })
+            <MarkedText word={description} filtredWord={filtredWord}/>
           }
         />
 
@@ -64,13 +46,16 @@ const OnePost = ({
           title={`Posted by: ${postedBy}`}
           description={new Date(dateCreated).toLocaleDateString()}
         />
-      </Link>
-      {postedById === userId && (
-        <Link to={`/post/edit/${postId}`}>
-          <EditOutlined key="edit" />
-        </Link>
-      )}
-    </Card>
+
+        {postedById === userId && (
+          <Button onClick={e => {
+            e.stopPropagation()
+            history.push(`/post/edit/${postId}`)}
+            }>
+            <EditOutlined key="edit" />
+          </Button>
+        )}
+      </Card>
   );
 };
 export default OnePost;

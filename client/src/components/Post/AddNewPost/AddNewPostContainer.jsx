@@ -8,13 +8,14 @@ import AddNewPost from "./AddNewPost";
 
 const AddNewPostContainer = ({
   createNewPost,
-  setIsAddPost,
+  setIsAddPost = () => {},
   redirectPath = "/posts",
 }) => {
   const [isRedirect, setIsRedirect] = useState(false);
 
   const sendNewPost = (title, fullText, description) => {
-    setIsAddPost(false);
+    setIsAddPost && setIsAddPost(false);
+    
     createNewPost(title, fullText, description);
     setIsRedirect(true);
   };

@@ -12,7 +12,7 @@ export const userReducer = (state = initialState, action) => {
     case SET_USERS:
       return {
         ...state,
-        users: action.users
+        users: action.users.reverse()
       }
     case SET_USER_BY_ID:
       return {

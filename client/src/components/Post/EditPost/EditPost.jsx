@@ -1,47 +1,38 @@
 import React, { useEffect, useState } from "react";
-import { Button, Typography, Modal } from "antd";
+import { Button, Typography, Modal, Image } from "antd";
 import Title from "antd/lib/typography/Title";
+import { useModal } from "../../../hooks/useModal";
+import { DownloadOutlined } from "@ant-design/icons";
+import PhotoLoader from "../../common/PhotoLoader/PhotoLoader";
 
 const { Paragraph } = Typography;
 
 const EditPost = ({
-  postPage: { title, fullText, description, _id },
+  postPage: { title, fullText, description, _id, image },
   editPostHandler,
   deletePostHandler,
+  updatePostPictureHandler,
 }) => {
   const [titleText, setTitleText] = useState(title);
   const [fullMain, setFullMain] = useState(fullText);
   const [descriptionText, setDescriptionText] = useState(description);
+  const [file, setFile] = useState({});
 
-  const [isModalDelete, setIsModalDelete] = useState(false);
-  const [isModalUpdate, setIsModalUpdate] = useState(false);
-
-  // for delete modal
-  const showDeleteModal = () => {
-    setIsModalDelete(true);
-  };
-
-  const handleOkDelete = () => {
-    deletePostHandler(_id);
-    setIsModalDelete(false);
-  };
-
-  const handleCancelDelete = () => {
-    setIsModalDelete(false);
-  };
-  // for update post modal
-  const showUpdateModal = () => {
-    setIsModalUpdate(true);
-  };
-
-  const handleOkUpdate = () => {
-    editPostHandler(_id, titleText, fullMain, descriptionText);
-    setIsModalUpdate(false);
-  };
-
-  const handleCancelUpdate = () => {
-    setIsModalUpdate(false);
-  };
+  const deletePost = useModal("Delete Post", deletePostHandler, _id);
+  const updatePost = useModal(
+    "Update Post",
+    editPostHandler,
+    _id,
+    titleText,
+    fullMain,
+    descriptionText
+  );
+  const updatePostPicture = useModal(
+    "Load new photo",
+    updatePostPictureHandler,
+    _id,
+    file
+  );
 
   useEffect(() => {
     setTitleText(title);
@@ -51,22 +42,16 @@ const EditPost = ({
 
   return (
     <>
-      <Modal
-        title="Delete Post"
-        visible={isModalDelete}
-        onOk={handleOkDelete}
-        onCancel={handleCancelDelete}
-      >
+      <Modal {...deletePost.bind}>
         <Title>Do you want delete this post?</Title>
       </Modal>
 
-      <Modal
-        title="Update Post"
-        visible={isModalUpdate}
-        onOk={handleOkUpdate}
-        onCancel={handleCancelUpdate}
-      >
+      <Modal {...updatePost.bind}>
         <Title>Do you want update this post?</Title>
+      </Modal>
+
+      <Modal {...updatePostPicture.bind}>
+        <PhotoLoader setFile={setFile} />
       </Modal>
 
       <Paragraph
@@ -78,6 +63,13 @@ const EditPost = ({
       >
         {titleText}
       </Paragraph>
+      {image && (
+          <Image
+            width={300}
+            src={image}
+            preview={false}
+          />
+        )}
       <Paragraph
         editable={{
           onChange: setFullMain,
@@ -100,13 +92,22 @@ const EditPost = ({
         <div style={{ paddingBottom: "10px" }}>
           <Button
             type="primary"
-            onClick={showUpdateModal}
+            shape="round"
+            icon={<DownloadOutlined />}
+            size="large"
+            onClick={updatePostPicture.openModal}
           >
+            Update Picture
+          </Button>
+        </div>
+
+        <div style={{ paddingBottom: "10px" }}>
+          <Button type="primary" onClick={updatePost.openModal}>
             Update
           </Button>
         </div>
         <div>
-          <Button type="primary" danger onClick={showDeleteModal}>
+          <Button type="primary" danger onClick={deletePost.openModal}>
             Delete
           </Button>
         </div>

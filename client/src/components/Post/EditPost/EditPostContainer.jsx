@@ -7,6 +7,7 @@ import {
   deletePost,
   getPostById,
   updatePost,
+  updatePostPicture,
 } from "../../../store/posts/actions";
 import EditPost from "./EditPost";
 
@@ -19,6 +20,7 @@ const EditPostContainer = ({
   getPostById,
   deletePost,
   updatePost,
+  updatePostPicture,
   redirectPath = "/posts",
 }) => {
   const [isRedirect, setIsRedirect] = useState(false);
@@ -31,6 +33,10 @@ const EditPostContainer = ({
     deletePost(_id);
     setIsRedirect(true);
   };
+  const updatePostPictureHandler = (_id, file) => {
+    updatePostPicture(_id, file);
+    
+  };
 
   useEffect(() => {
     getPostById(id);
@@ -40,6 +46,7 @@ const EditPostContainer = ({
     <Redirect to={redirectPath} />
   ) : (
     <EditPost
+      updatePostPictureHandler={updatePostPictureHandler}
       deletePostHandler={deletePostHandler}
       editPostHandler={editPostHandler}
       postPage={postPage}
@@ -57,7 +64,12 @@ let mapStateToProps = (state) => {
 };
 
 export default compose(
-  connect(mapStateToProps, { getPostById, deletePost, updatePost }),
+  connect(mapStateToProps, {
+    getPostById,
+    deletePost,
+    updatePost,
+    updatePostPicture,
+  }),
   withRouter,
   withAuthRedirect
 )(EditPostContainer);

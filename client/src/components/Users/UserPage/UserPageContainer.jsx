@@ -14,19 +14,22 @@ const UserPageContainer = ({
   userPage,
   getPosts,
   posts,
+  _id
 }) => {
   useEffect(() => {
     getPosts();
     getUserById(id);
   }, [getUserById, id, getPosts]);
 
-  return <UserPage userPage={userPage} posts={posts} />;
+  return <UserPage userPage={userPage} posts={posts} authUserId={_id} />;
 };
 
 let mapStateToProps = (state) => {
   const { userPage } = state.usersPage;
   const { posts } = state.postsPage;
-  return { userPage, posts };
+  const { _id } = state.authPage;
+
+  return { userPage, posts, _id };
 };
 
 export default compose(

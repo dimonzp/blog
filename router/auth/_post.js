@@ -20,7 +20,7 @@ const authUser = (req, res, next) =>
 							{ user },
 							process.env.SECRET_KEY,
 							{
-								expiresIn: '1h',
+								expiresIn: '1d',
 							}
 						)
 						res.status(200).send({ token })

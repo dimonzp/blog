@@ -8,6 +8,7 @@ import Title from "antd/lib/typography/Title";
 const UserPage = ({
   userPage: { _id, email, name, dateCreated, avatar },
   posts,
+  authUserId
 }) => {
   return (
     <>
@@ -35,7 +36,7 @@ const UserPage = ({
                 postedBy={name}
                 postedById={p.postedBy}
                 avatar={avatar || ""}
-                userId={_id}
+                userId={authUserId}
                 description={p.description}
                 dateCreated={p.dateCreated}
                 filtredWord={""}

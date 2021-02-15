@@ -6,7 +6,7 @@ import { postAuth } from "../../store/auth/actions";
 import Auth from "./Auth";
 
 const AuthContainer = (props) => {
-  const { email, postAuth } = props;
+  const { email, postAuth, error } = props;
   const onHandlerSubmit = (email, password) => {
     postAuth(email, password);
   };
@@ -16,13 +16,15 @@ const AuthContainer = (props) => {
       {email ? (
         <Redirect to="/posts" />
       ) : (
-        <Auth {...props} onHandlerSubmit={onHandlerSubmit} />
+        <Auth error={error} onHandlerSubmit={onHandlerSubmit} />
       )}
     </>
   );
 };
+
 let mapStateToProps = (state) => {
-  const { email } = state.authPage;
-  return { email };
+  const { email, error } = state.authPage;
+  console.log("AUTH CONTAINER", error);
+  return { email, error };
 };
 export default compose(connect(mapStateToProps, { postAuth }))(AuthContainer);

@@ -2,21 +2,22 @@ import React, { useState } from "react";
 import { Upload, message, Button } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 
-
-const PhotoLoader = ({ setBase64 }) => {
+const PhotoLoader = ({ setFile }) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
 
   const beforeUpload = (file) => {
-    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+    const isJpgOrPng =
+      file.type === "image/jpeg" ||
+      file.type === "image/png" 
     if (!isJpgOrPng) {
       message.error("You can only upload JPG/PNG file!");
     }
-    const isLt2M = file.size / 1024 / 1024 < 2;
+    const isLt2M = file.size / 1024 / 1024  < 2;
     if (!isLt2M) {
-      message.error("Image must smaller than 2MB!");
+      message.error("Image must smaller than 2 Mb!");
     }
-    setBase64(file);
+    setFile(file);
     return isJpgOrPng && isLt2M;
   };
 
@@ -69,7 +70,7 @@ const PhotoLoader = ({ setBase64 }) => {
         <Button
           onClick={() => {
             setImageUrl("");
-            setBase64("");
+            setFile("");
           }}
         >
           Reset

@@ -7,6 +7,7 @@ const initialState = {
   dateCreated: "",
   avatar: "",
   error: "",
+  message: ""
 };
 
 export const authReducer = (state = initialState, action) => {
@@ -25,7 +26,7 @@ export const authReducer = (state = initialState, action) => {
     case SET_ERROR:
       return {
         ...state,
-        error: action.error[0].message,
+        error: action.error,
       };
     case LOGOUT:
       return {
